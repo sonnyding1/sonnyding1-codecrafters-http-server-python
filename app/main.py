@@ -44,15 +44,15 @@ def handle_request(input: bytes, args) -> bytes:
         file_path = os.path.join(args.directory, path[7:])
         print("file path: ", file_path)
         if os.path.isfile(file_path):
-            print("found file")
             body = ""
             with open(file_path, "rb") as file:
                 body = file.read()
-            output.append("HTTP/1.1 200 OK")
-            output.append("Content-Type: application/octet-stream")
-            output.append(f"Content-Length: {len(body)}")
-            output.append("")
-            output.append(body)
+                # print("found file")
+                output.append("HTTP/1.1 200 OK")
+                output.append("Content-Type: application/octet-stream")
+                output.append(f"Content-Length: {len(body)}")
+                output.append("")
+                output.append(body)
         else:
             print("file not found")
             output.append("HTTP/1.1 404 Not Found")
