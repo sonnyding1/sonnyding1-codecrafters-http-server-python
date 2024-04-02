@@ -27,7 +27,7 @@ def handle_request(input: bytes) -> bytes:
         body = path[6:]
         output.append("HTTP/1.1 200 OK")
         output.append("Content-Type: text/plain")
-        output.append("Content-Length: 3")
+        output.append(f"Content-Length: {len(body)}")
         output.append("")
         output.append(body)
     else:
