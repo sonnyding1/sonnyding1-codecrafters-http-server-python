@@ -40,8 +40,8 @@ def handle_request(input: bytes) -> bytes:
         output.append("")
         output.append(body)
     elif len(path) >= 5 and path[:5] == "/files":
-        file_path = path[6:]
-        if os.path.exists(file_path):
+        file_path = os.path.join(dir, path[6:])
+        if os.path.isfile(file_path):
             body = ""
             with open(file_path, "rb") as file:
                 body = file.read()
