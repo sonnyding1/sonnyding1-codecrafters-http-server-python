@@ -42,6 +42,7 @@ def handle_request(input: bytes, args) -> bytes:
         output.append(body)
     elif len(path) >= 6 and path[:6] == "/files":
         file_path = os.path.join(args.directory, path[6:])
+        print("args directory: ", args.directory)
         print("file path: ", file_path)
         if os.path.isfile(file_path):
             body = ""
