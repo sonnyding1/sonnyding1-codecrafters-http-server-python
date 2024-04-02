@@ -15,6 +15,7 @@ def handle_request(input: bytes) -> bytes:
     input = parse_input(input)
     method, path, version = input[0].split(" ")
     output = ""
+    print(path)
     if path == "/":
         output = b"HTTP/1.1 200 OK\r\n\r\n"
     else:
