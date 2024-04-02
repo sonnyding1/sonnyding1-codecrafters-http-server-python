@@ -42,19 +42,14 @@ def handle_request(input: bytes, args) -> bytes:
         output.append(body)
     elif method == "GET" and len(path) >= 6 and path[:6] == "/files":
         file_path = os.path.join(args.directory, path[7:])
-        if os.path.isfile(file_path):
-            body = ""
-            with open(file_path, "r") as file:
-                body = file.read()
-            output.append("HTTP/1.1 200 OK")
-            output.append("Content-Type: application/octet-stream")
-            output.append(f"Content-Length: {len(body)}")
-            output.append("")
-            output.append(body)
-        else:
-            output.append("HTTP/1.1 404 Not Found")
-            output.append("Content-Length: 0")
-            output.append("")
+        body = ""
+        with open(file_path, "r") as file:
+            body = file.read()
+        output.append("HTTP/1.1 200 OK")
+        output.append("Content-Type: application/octet-stream")
+        output.append(f"Content-Length: {len(body)}")
+        output.append("")
+        output.append(body)
     elif method == "POST" and len(path) >= 6 and path[:6] == "/files":
         file_path = os.path.join(args.directory, path[7:])
         if os.path.isfile(file_path):
