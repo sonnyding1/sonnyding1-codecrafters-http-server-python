@@ -41,6 +41,7 @@ def handle_request(input: bytes) -> bytes:
         output.append(body)
     elif len(path) >= 5 and path[:5] == "/files":
         file_path = os.path.join(dir, path[6:])
+        print(file_path)
         if os.path.isfile(file_path):
             body = ""
             with open(file_path, "rb") as file:
@@ -56,7 +57,6 @@ def handle_request(input: bytes) -> bytes:
     else:
         output.append("HTTP/1.1 404 Not Found")
         output.append("")
-    print(output)
 
     return convert_to_output(output)
 
