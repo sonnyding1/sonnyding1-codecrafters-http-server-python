@@ -1,6 +1,7 @@
 import socket
 import threading
 import os
+import argparse
 from typing import List
 
 
@@ -14,7 +15,7 @@ def convert_to_output(input: List[str]) -> bytes:
     return output.encode()
 
 
-def handle_request(input: bytes) -> bytes:
+def handle_request(input: bytes, args) -> bytes:
     # we expect requests like this:
     # GET /index.html HTTP/1.1
     # Host: localhost:4221
@@ -40,7 +41,7 @@ def handle_request(input: bytes) -> bytes:
         output.append("")
         output.append(body)
     elif len(path) >= 5 and path[:5] == "/files":
-        file_path = os.path.join(dir, path[6:])
+        file_path = os.path.join(args.directory, path[6:])
         print(file_path)
         if os.path.isfile(file_path):
             body = ""
@@ -61,22 +62,26 @@ def handle_request(input: bytes) -> bytes:
     return convert_to_output(output)
 
 
-def handle_client(connection):
+def handle_client(connection, args):
     with connection:
         while True:
             input = connection.recv(1024)
-            connection.sendall(handle_request(input))
+            connection.sendall(handle_request(input, args))
 
 
 def main():
     # You can use print statements as follows for debugging, they'll be visible when running tests.
     print("Logs from your program will appear here!")
 
+    parser = argparse.ArgumentParser(description="start the server")
+    parser.add_argument("--directory", type=str)
+    args = parser.parse_args()
+
     server_socket = socket.create_server(("localhost", 4221), reuse_port=True)
 
     while True:
         connection, client = server_socket.accept()  # wait for client
-        thread = threading.Thread(target=handle_client, args=(connection,))
+        thread = threading.Thread(target=handle_client, args=(connection, args))
         thread.start()
 
 
