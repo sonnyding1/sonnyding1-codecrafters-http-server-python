@@ -11,6 +11,7 @@ def main():
     with connection:
         connection.recv(1024)
         connection.sendall("HTTP/1.1 200 OK\r\n\r\n")
+    server_socket.close()
 
 
 if __name__ == "__main__":
