@@ -7,6 +7,11 @@ def parse_input(input: bytes) -> List[str]:
     return input.split("\r\n")
 
 
+def convert_to_output(input: List[str]) -> bytes:
+    output = "\r\n".join(input) + "\r\n"
+    return output.encode()
+
+
 def handle_request(input: bytes) -> bytes:
     # we expect requests like this:
     # GET /index.html HTTP/1.1
@@ -14,12 +19,21 @@ def handle_request(input: bytes) -> bytes:
     # User-Agent: curl/7.64.1
     input = parse_input(input)
     method, path, version = input[0].split(" ")
-    output = ""
+    output = []
     if path == "/":
-        output = b"HTTP/1.1 200 OK\r\n\r\n"
+        output.append("HTTP/1.1 200 OK")
+        output.append("")  # empty body
+    if len(path) >= 5 and path[:5] == "/echo":
+        body = path[6:]
+        output.append("HTTP/1.1 200 OK")
+        output.append("Content-Type: text/plain")
+        output.append("Content-Length: 3")
+        output.append("")
+        output.append(body)
     else:
-        output = b"HTTP/1.1 404 Not Found\r\n\r\n"
-    return output
+        output.append("HTTP/1.1 404 Not Found")
+
+    return convert_to_output(output)
 
 
 def main():
