@@ -58,7 +58,7 @@ def handle_request(input: bytes, args) -> bytes:
     elif method == "POST" and len(path) >= 6 and path[:6] == "/files":
         file_path = os.path.join(args.directory, path[7:])
         if os.path.isfile(file_path):
-            body = input[4]
+            body = input[6]
             with open(file_path, "w") as file:
                 file.write(body)
             output.append("HTTP/1.1 201 OK")
