@@ -76,6 +76,7 @@ def main():
     parser = argparse.ArgumentParser(description="start the server")
     parser.add_argument("--directory", type=str)
     args = parser.parse_args()
+    print(args)
 
     server_socket = socket.create_server(("localhost", 4221), reuse_port=True)
 
