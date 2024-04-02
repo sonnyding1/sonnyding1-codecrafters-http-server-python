@@ -30,6 +30,13 @@ def handle_request(input: bytes) -> bytes:
         output.append(f"Content-Length: {len(body)}")
         output.append("")
         output.append(body)
+    elif len(path) >= 11 and path[:11] == "/user-agent":
+        body = input[2].split(": ")[1]
+        output.append("HTTP/1.1 200 OK")
+        output.append("Content-Type: text/plain")
+        output.append(f"Content-Length: {len(body)}")
+        output.append("")
+        output.append(body)
     else:
         output.append("HTTP/1.1 404 Not Found")
         output.append("")
