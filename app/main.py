@@ -1,4 +1,5 @@
 import socket
+import threading
 from typing import List
 
 
@@ -45,17 +46,23 @@ def handle_request(input: bytes) -> bytes:
     return convert_to_output(output)
 
 
+def handle_client(connection):
+    with connection:
+        while True:
+            input = connection.recv(1024)
+            connection.sendall(handle_request(input))
+    server_socket.close()
+
+
 def main():
     # You can use print statements as follows for debugging, they'll be visible when running tests.
     print("Logs from your program will appear here!")
 
     server_socket = socket.create_server(("localhost", 4221), reuse_port=True)
-    connection, client = server_socket.accept()  # wait for client
 
-    with connection:
-        input = connection.recv(1024)
-        connection.sendall(handle_request(input))
-    server_socket.close()
+    while True:
+        connection, client = server_socket.accept()  # wait for client
+        thread = threading.Thread(target=handle_client, args=(connection,))
 
 
 if __name__ == "__main__":
