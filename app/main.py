@@ -45,9 +45,8 @@ def handle_request(input: bytes, args) -> bytes:
         print("file path: ", file_path)
         if os.path.isfile(file_path):
             body = ""
-            with open(file_path, "rb") as file:
+            with open(file_path, "r") as file:
                 body = file.read()
-            print(body)
             output.append("HTTP/1.1 200 OK")
             output.append("Content-Type: application/octet-stream")
             output.append(f"Content-Length: {len(body)}")
