@@ -32,6 +32,7 @@ def handle_request(input: bytes) -> bytes:
         output.append(body)
     else:
         output.append("HTTP/1.1 404 Not Found")
+        output.append("")
     print(output)
 
     return convert_to_output(output)
