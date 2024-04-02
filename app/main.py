@@ -40,7 +40,7 @@ def handle_request(input: bytes, args) -> bytes:
         output.append(f"Content-Length: {len(body)}")
         output.append("")
         output.append(body)
-    elif len(path) >= 5 and path[:5] == "/files":
+    elif len(path) >= 6 and path[:6] == "/files":
         file_path = os.path.join(args.directory, path[6:])
         print(file_path)
         if os.path.isfile(file_path):
@@ -76,7 +76,6 @@ def main():
     parser = argparse.ArgumentParser(description="start the server")
     parser.add_argument("--directory", type=str)
     args = parser.parse_args()
-    print(args)
 
     server_socket = socket.create_server(("localhost", 4221), reuse_port=True)
 
