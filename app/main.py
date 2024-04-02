@@ -42,9 +42,9 @@ def handle_request(input: bytes, args) -> bytes:
         output.append(body)
     elif len(path) >= 6 and path[:6] == "/files":
         file_path = os.path.join(args.directory, path[7:])
-        print("args directory: ", args.directory)
         print("file path: ", file_path)
         if os.path.isfile(file_path):
+            print("found file")
             body = ""
             with open(file_path, "rb") as file:
                 body = file.read()
@@ -54,6 +54,7 @@ def handle_request(input: bytes, args) -> bytes:
             output.append("")
             output.append(body)
         else:
+            print("file not found")
             output.append("HTTP/1.1 404 Not Found")
             output.append("")
     else:
