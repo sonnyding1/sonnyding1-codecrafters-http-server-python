@@ -56,6 +56,7 @@ def handle_request(input: bytes, args) -> bytes:
             print("file not found")
             output.append("HTTP/1.1 404 Not Found")
             output.append("Content-Length: 0")
+            output.append("")
     else:
         output.append("HTTP/1.1 404 Not Found")
         output.append("")
