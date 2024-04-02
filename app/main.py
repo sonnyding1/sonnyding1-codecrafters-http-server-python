@@ -1,5 +1,6 @@
 import socket
 import threading
+import os
 from typing import List
 
 
@@ -38,6 +39,17 @@ def handle_request(input: bytes) -> bytes:
         output.append(f"Content-Length: {len(body)}")
         output.append("")
         output.append(body)
+    elif len(path) >= 5 and path[:5] == "/files":
+        file_path = path[6:]
+        if os.path.exists(file_path):
+            body = ""
+            with open(file_path, "rb") as file:
+                body = file.read()
+            output.append("HTTP/1.1 200 OK")
+            output.append("Content-Type: application/octet-stream")
+            output.append(f"Content-Length: {len(body)}")
+            output.append("")
+            output.append(body)
     else:
         output.append("HTTP/1.1 404 Not Found")
         output.append("")
@@ -51,7 +63,6 @@ def handle_client(connection):
         while True:
             input = connection.recv(1024)
             connection.sendall(handle_request(input))
-    server_socket.close()
 
 
 def main():
