@@ -23,26 +23,25 @@ def handle_request(input: bytes, args) -> bytes:
     input = parse_input(input)
     method, path, version = input[0].split(" ")
     output = []
-    if path == "/":
+    if method == "GET" and path == "/":
         output.append("HTTP/1.1 200 OK")
         output.append("")  # empty body
-    elif len(path) >= 5 and path[:5] == "/echo":
+    elif method == "GET" and len(path) >= 5 and path[:5] == "/echo":
         body = path[6:]
         output.append("HTTP/1.1 200 OK")
         output.append("Content-Type: text/plain")
         output.append(f"Content-Length: {len(body)}")
         output.append("")
         output.append(body)
-    elif len(path) >= 11 and path[:11] == "/user-agent":
+    elif method == "GET" and len(path) >= 11 and path[:11] == "/user-agent":
         body = input[2].split(": ")[1]
         output.append("HTTP/1.1 200 OK")
         output.append("Content-Type: text/plain")
         output.append(f"Content-Length: {len(body)}")
         output.append("")
         output.append(body)
-    elif len(path) >= 6 and path[:6] == "/files":
+    elif method == "GET" and len(path) >= 6 and path[:6] == "/files":
         file_path = os.path.join(args.directory, path[7:])
-        print("file path: ", file_path)
         if os.path.isfile(file_path):
             body = ""
             with open(file_path, "r") as file:
@@ -53,7 +52,18 @@ def handle_request(input: bytes, args) -> bytes:
             output.append("")
             output.append(body)
         else:
-            print("file not found")
+            output.append("HTTP/1.1 404 Not Found")
+            output.append("Content-Length: 0")
+            output.append("")
+    elif method == "POST" and len(path) >= 6 and path[:6] == "/files":
+        file_path = os.path.join(args.directory, path[7:])
+        if os.path.isfile(file_path):
+            body = input[4]
+            with open(file_path, "w") as file:
+                file.write(body)
+            output.append("HTTP/1.1 201 OK")
+            output.append("")
+        else:
             output.append("HTTP/1.1 404 Not Found")
             output.append("Content-Length: 0")
             output.append("")
