@@ -23,7 +23,7 @@ def handle_request(input: bytes) -> bytes:
     if path == "/":
         output.append("HTTP/1.1 200 OK")
         output.append("")  # empty body
-    if len(path) >= 5 and path[:5] == "/echo":
+    elif len(path) >= 5 and path[:5] == "/echo":
         body = path[6:]
         output.append("HTTP/1.1 200 OK")
         output.append("Content-Type: text/plain")
