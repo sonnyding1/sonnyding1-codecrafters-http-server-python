@@ -1,4 +1,25 @@
 import socket
+from typing import List
+
+
+def parse_input(input: bytes) -> List[str]:
+    input = input.decode()
+    return input.split("\r\n")
+
+
+def handle_request(input: bytes) -> bytes:
+    # we expect requests like this:
+    # GET /index.html HTTP/1.1
+    # Host: localhost:4221
+    # User-Agent: curl/7.64.1
+    input = parse_input(input)
+    method, path, version = input[0].split(" ")
+    output = ""
+    if path == "/":
+        output = b"HTTP/1.1 200 OK\r\n\r\n"
+    else:
+        output = b"HTTP/1.1 200 OK\r\n\r\n"
+    return output
 
 
 def main():
@@ -9,8 +30,8 @@ def main():
     connection, client = server_socket.accept()  # wait for client
 
     with connection:
-        connection.recv(1024)
-        connection.sendall(b"HTTP/1.1 200 OK\r\n\r\n")
+        input = connection.recv(1024)
+        connection.sendall(handle_request(input))
     server_socket.close()
 
 
